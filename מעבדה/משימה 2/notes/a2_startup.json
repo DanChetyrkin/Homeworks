@@ -1,8 +1,0 @@
-{
-  "received_ascii": "Lab 2 ready.\r\n",
-  "firmware_sha256": "208417F98626A669D51E534206F7A52EFCA71D6579F9528A2CD35198AD7C73D6",
-  "baud": 115200,
-  "port": "COM7",
-  "startup_ok": true,
-  "format": "8N1"
-}

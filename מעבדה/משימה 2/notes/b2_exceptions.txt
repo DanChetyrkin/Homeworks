@@ -1,4 +1,0 @@
-B2: flash verified, lab02_B2.elf, SHA256 87DFA2F7102FCB30F52111BA0A8F2F841723EB0C1B556FD4290C38FDE1E81D33
-[PC] COM7 open: Modbus RTU master, slave 1, 115200 baud, 8N1.
-[PC] read register 9 (no such register): exception code 2
-[PC] function 0x04 (not supported): exception code 1
