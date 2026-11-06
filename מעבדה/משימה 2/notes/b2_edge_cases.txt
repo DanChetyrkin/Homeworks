@@ -1,0 +1,7 @@
+zero read count: exception 03, valid CRC
+read count above 125: exception 03, valid CRC
+range crosses last register: exception 02, valid CRC
+write to a read-only register: exception 02, valid CRC
+short write with valid CRC: exception 03, valid CRC
+Wrong address with good CRC: silent, neither counter increments.
+Wrong address with bad CRC: silent, bad increments before the address check.
