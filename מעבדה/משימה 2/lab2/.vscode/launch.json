@@ -1,0 +1,33 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    //
+    // Lab 2: pick "Debug XX" in the Run and Debug view, then F5.
+    // It builds task XX (task "Build XX"), flashes it, and stops at main().
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "stlinkgdbtarget",
+            "request": "launch",
+            "name": "STM32Cube: Launch ST-Link GDB Server",
+            "origin": "snippet",
+            "cwd": "${workspaceFolder}",
+            "preBuild": "${command:st-stm32-ide-debug-launch.build}",
+            "runEntry": "main",
+            "imagesAndSymbols": [
+                {
+                    "imageFileName": "${command:st-stm32-ide-debug-launch.get-projects-binary-from-context1}"
+                }
+            ]
+        },
+        { "type": "stlinkgdbtarget", "request": "launch", "name": "Debug A1",  "cwd": "${workspaceFolder}", "preLaunchTask": "Build A1",  "runEntry": "main", "imagesAndSymbols": [ { "imageFileName": "${workspaceFolder}/build/A1/lab2.elf" } ] },
+        { "type": "stlinkgdbtarget", "request": "launch", "name": "Debug A2",  "cwd": "${workspaceFolder}", "preLaunchTask": "Build A2",  "runEntry": "main", "imagesAndSymbols": [ { "imageFileName": "${workspaceFolder}/build/A2/lab2.elf" } ] },
+        { "type": "stlinkgdbtarget", "request": "launch", "name": "Debug A3a", "cwd": "${workspaceFolder}", "preLaunchTask": "Build A3a", "runEntry": "main", "imagesAndSymbols": [ { "imageFileName": "${workspaceFolder}/build/A3a/lab2.elf" } ] },
+        { "type": "stlinkgdbtarget", "request": "launch", "name": "Debug A3b", "cwd": "${workspaceFolder}", "preLaunchTask": "Build A3b", "runEntry": "main", "imagesAndSymbols": [ { "imageFileName": "${workspaceFolder}/build/A3b/lab2.elf" } ] },
+        { "type": "stlinkgdbtarget", "request": "launch", "name": "Debug A3c", "cwd": "${workspaceFolder}", "preLaunchTask": "Build A3c", "runEntry": "main", "imagesAndSymbols": [ { "imageFileName": "${workspaceFolder}/build/A3c/lab2.elf" } ] },
+        { "type": "stlinkgdbtarget", "request": "launch", "name": "Debug B1",  "cwd": "${workspaceFolder}", "preLaunchTask": "Build B1",  "runEntry": "main", "imagesAndSymbols": [ { "imageFileName": "${workspaceFolder}/build/B1/lab2.elf" } ] },
+        { "type": "stlinkgdbtarget", "request": "launch", "name": "Debug B2",  "cwd": "${workspaceFolder}", "preLaunchTask": "Build B2",  "runEntry": "main", "imagesAndSymbols": [ { "imageFileName": "${workspaceFolder}/build/B2/lab2.elf" } ] },
+        { "type": "stlinkgdbtarget", "request": "launch", "name": "Debug B3",  "cwd": "${workspaceFolder}", "preLaunchTask": "Build B3",  "runEntry": "main", "imagesAndSymbols": [ { "imageFileName": "${workspaceFolder}/build/B3/lab2.elf" } ] }
+    ]
+}

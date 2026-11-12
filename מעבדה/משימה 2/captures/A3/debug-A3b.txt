@@ -1,0 +1,53 @@
+===== Lab 2, A3b: debugger session 2026-11-12 15:02:26
+flashed build/A3b/lab2.elf (this project, Debug -O0 -g3); the board runs it from reset
+<<< [board -> PC] 'Lab 2 ready.\r\n'
+
+===== GDB attaches: the program PAUSES here (like Pause, F6, in VS Code)
+0x080013e8 in main () at Core/Src/lab2partAtask3.c:218
+218	    for (volatile uint32_t i = 0; i < WORK_PASSES; i++) { }
+#0  0x080013e8 in main () at Core/Src/lab2partAtask3.c:218
+218	    for (volatile uint32_t i = 0; i < WORK_PASSES; i++) { }
+i = 574439
+now = 0
+(the pause almost always lands in the busy-wait loop: i counts to WORK_PASSES = 2000000)
+
+----- fresh start: nothing received yet
+WATCH  (LPUART1->ISR >> 5) & 1U             = 0
+WATCH  (LPUART1->ISR >> 3) & 1U             = 0
+
+----- breakpoint on the polling echo, line 212; the PC sends 0123456789 while the loop is in the delay
+Breakpoint 1 at 0x80013c4: file Core/Src/lab2partAtask3.c, line 212.
+Note: automatically using hardware breakpoints for read-only addresses.
+>>> [PC -> board] first line: '0123456789'
+
+Breakpoint 1, main () at Core/Src/lab2partAtask3.c:212
+212	      uart_putc((char)LPUART1->RDR);
+
+----- stopped at the echo: after the delay, the loop found RXNE = 1
+WATCH  (LPUART1->ISR >> 5) & 1U             = 1
+WATCH  (LPUART1->ISR >> 3) & 1U             = 1
+-> RXNE = 1: RDR holds the first character. ORE = 1: the other 9 overran and are lost
+LPUART1->ISR = 0x006000F8
+217	    GPIOA->ODR ^= GPIO_ODR_OD5;
+
+----- after this line ran: it read RDR and echoed it
+WATCH  (LPUART1->ISR >> 5) & 1U             = 0
+WATCH  (LPUART1->ISR >> 3) & 1U             = 1
+-> reading RDR cleared RXNE. ORE stays 1: the polling code never clears it
+
+----- the PC sends 0123456789 again; then pause after 6 more loop passes (about 1 s)
+Breakpoint 2 at 0x80013d0: file Core/Src/lab2partAtask3.c, line 217.
+<<< [board -> PC] '0'
+>>> [PC -> board] second line: '0123456789'
+
+Breakpoint 2, main () at Core/Src/lab2partAtask3.c:217
+217	    GPIOA->ODR ^= GPIO_ODR_OD5;
+
+----- WATCH of Task A3b: paused after the two lines
+WATCH  (LPUART1->ISR >> 5) & 1U             = 0
+WATCH  (LPUART1->ISR >> 3) & 1U             = 1
+LPUART1->ISR = 0x006000D8
+-> RXNE = 0 and ORE = 1: while ORE is set, no new byte reaches RDR, so the second line returns nothing
+
+===== detach: the program RUNS again (like Continue, F5)
+[Inferior 1 (Remote target) detached]

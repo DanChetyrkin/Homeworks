@@ -1,0 +1,38 @@
+{
+    // Lab 2: Ctrl+Shift+P -> "Tasks: Run Task" -> pick a task.
+    // "Run XX" builds task XX and flashes it to the board.
+    // "Build XX" (hidden) only builds; the "Debug XX" launch configurations use it.
+    "version": "2.0.0",
+    "options": {
+        "cwd": "${workspaceFolder}"
+    },
+    "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+    },
+    "tasks": [
+        { "label": "Run A1",  "detail": "Text and random digits (B1 button)",          "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "A1"],  "problemMatcher": "$gcc" },
+        { "label": "Run A2",  "detail": "Same + copy on USART1, PC4 (oscilloscope)",   "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "A2"],  "problemMatcher": "$gcc" },
+        { "label": "Run A3a", "detail": "Echo by polling, no delay",                    "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "A3a"], "problemMatcher": "$gcc" },
+        { "label": "Run A3b", "detail": "Echo by polling + busy-wait delay (ECHO_BY_INTERRUPT 0)", "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "A3b"], "problemMatcher": "$gcc" },
+        { "label": "Run A3c", "detail": "Echo by interrupt + delay (ECHO_BY_INTERRUPT 1)",         "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "A3c"], "problemMatcher": "$gcc" },
+        { "label": "Run B1",  "detail": "Modbus slave: write LD2",                      "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "B1"],  "problemMatcher": "$gcc" },
+        { "label": "Run B2",  "detail": "Modbus slave: read registers + exceptions",    "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "B2"],  "problemMatcher": "$gcc" },
+        { "label": "Run B3",  "detail": "Modbus slave: software vs hardware CRC",       "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "B3"],  "problemMatcher": "$gcc" },
+
+        { "label": "Build A1",  "hide": true, "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "A1",  "-BuildOnly"], "problemMatcher": "$gcc" },
+        { "label": "Build A2",  "hide": true, "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "A2",  "-BuildOnly"], "problemMatcher": "$gcc" },
+        { "label": "Build A3a", "hide": true, "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "A3a", "-BuildOnly"], "problemMatcher": "$gcc" },
+        { "label": "Build A3b", "hide": true, "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "A3b", "-BuildOnly"], "problemMatcher": "$gcc" },
+        { "label": "Build A3c", "hide": true, "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "A3c", "-BuildOnly"], "problemMatcher": "$gcc" },
+        { "label": "Build B1",  "hide": true, "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "B1",  "-BuildOnly"], "problemMatcher": "$gcc" },
+        { "label": "Build B2",  "hide": true, "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "B2",  "-BuildOnly"], "problemMatcher": "$gcc" },
+        { "label": "Build B3",  "hide": true, "type": "process", "command": "powershell", "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/run-task.ps1", "B3",  "-BuildOnly"], "problemMatcher": "$gcc" },
+
+        { "label": "Modbus: write-only (B1)",  "detail": "lab02_modbus.py --write-only. Stop the Serial Monitor first.", "type": "process", "command": "python", "args": ["${workspaceFolder}/../lab02_modbus.py", "--write-only"],   "problemMatcher": [] },
+        { "label": "Modbus: read (B2, B3)",    "detail": "lab02_modbus.py: 20 rounds of write + read.",                 "type": "process", "command": "python", "args": ["${workspaceFolder}/../lab02_modbus.py"],                   "problemMatcher": [] },
+        { "label": "Modbus: exceptions (B2)",  "detail": "lab02_modbus.py --exceptions",                                "type": "process", "command": "python", "args": ["${workspaceFolder}/../lab02_modbus.py", "--exceptions"],   "problemMatcher": [] },
+        { "label": "Modbus: noise 0.3 (B2)",   "detail": "lab02_modbus.py --errors 0.3. Reset the board first.",        "type": "process", "command": "python", "args": ["${workspaceFolder}/../lab02_modbus.py", "--errors", "0.3"], "problemMatcher": [] }
+    ]
+}

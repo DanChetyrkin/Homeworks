@@ -1,0 +1,26 @@
+===== Lab 2, A2: debugger session 2026-11-12 15:02:21
+flashed build/A2/lab2.elf (this project, Debug -O0 -g3); the board runs it from reset
+<<< [board -> PC] 'Lab 2 ready.\r\n'
+
+===== GDB attaches: the program PAUSES here (like Pause, F6, in VS Code)
+main () at Core/Src/lab2partAtask2.c:163
+163	    uint32_t now = (GPIOC->IDR >> 13) & 1U;            /* is B1 down now? (1 = down) */
+#0  main () at Core/Src/lab2partAtask2.c:163
+163	    uint32_t now = (GPIOC->IDR >> 13) & 1U;            /* is B1 down now? (1 = down) */
+
+----- USART1 copy on PC4 (Task A2)
+WATCH  (GPIOC->MODER >> 8) & 3              = 2
+-> PC4 = 10, alternate function
+WATCH  (GPIOC->AFR[0] >> 16) & 0xF          = 7
+-> AF7 = USART1_TX
+WATCH  (RCC->APB2ENR >> 14) & 1             = 1
+-> USART1EN = 1
+WATCH  USART1->BRR                          = 1476
+-> baud = 170 MHz / 1476 = 115176.2
+WATCH  LPUART1->BRR                         = 377778
+-> baud = 256 * 170 MHz / 377778 = 115199.9
+WATCH  USART1->CR1                          = 9 = 0x9
+-> 0x9 = UE + TE; RE (bit 2) = 0: USART1 only transmits
+
+===== detach: the program RUNS again (like Continue, F5)
+[Inferior 1 (Remote target) detached]

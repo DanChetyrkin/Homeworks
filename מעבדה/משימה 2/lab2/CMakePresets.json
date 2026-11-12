@@ -1,0 +1,48 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "default",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+		    "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
+            "cacheVariables": {
+            }
+        },
+        {
+            "name": "Debug",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "Release",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        { "name": "A1",  "displayName": "Lab 2 - A1: text and random digits",  "inherits": "Debug", "cacheVariables": { "LAB_TASK": "A1" } },
+        { "name": "A2",  "displayName": "Lab 2 - A2: copy on USART1 (PC4)",    "inherits": "Debug", "cacheVariables": { "LAB_TASK": "A2" } },
+        { "name": "A3a", "displayName": "Lab 2 - A3a: echo by polling",        "inherits": "Debug", "cacheVariables": { "LAB_TASK": "A3a" } },
+        { "name": "A3b", "displayName": "Lab 2 - A3b: polling + delay",        "inherits": "Debug", "cacheVariables": { "LAB_TASK": "A3b" } },
+        { "name": "A3c", "displayName": "Lab 2 - A3c: echo by interrupt",      "inherits": "Debug", "cacheVariables": { "LAB_TASK": "A3c" } },
+        { "name": "B1",  "displayName": "Lab 2 - B1: Modbus write LD2",        "inherits": "Debug", "cacheVariables": { "LAB_TASK": "B1" } },
+        { "name": "B2",  "displayName": "Lab 2 - B2: Modbus read + exceptions","inherits": "Debug", "cacheVariables": { "LAB_TASK": "B2" } },
+        { "name": "B3",  "displayName": "Lab 2 - B3: software vs hardware CRC","inherits": "Debug", "cacheVariables": { "LAB_TASK": "B3" } }
+    ],
+    "buildPresets": [
+        { "name": "Debug",   "configurePreset": "Debug" },
+        { "name": "Release", "configurePreset": "Release" },
+        { "name": "A1",  "configurePreset": "A1" },
+        { "name": "A2",  "configurePreset": "A2" },
+        { "name": "A3a", "configurePreset": "A3a" },
+        { "name": "A3b", "configurePreset": "A3b" },
+        { "name": "A3c", "configurePreset": "A3c" },
+        { "name": "B1",  "configurePreset": "B1" },
+        { "name": "B2",  "configurePreset": "B2" },
+        { "name": "B3",  "configurePreset": "B3" }
+    ]
+}

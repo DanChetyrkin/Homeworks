@@ -1,0 +1,13 @@
+=== A2  (2026-11-12 14:48:43, port COM7)
+flash: run-task.ps1 A2
+  flashed lab2\build\A2\lab2.elf (built 2026-11-12 13:49)
+  startup text: 'Lab 2 ready.\r\n'
+  [PASS] the board sends "Lab 2 ready." at reset
+  GPIOC->MODER = 0xF3FFFEFF   GPIOC->AFR[0] = 0x00070000
+  [PASS] PC4 in mode 10 (alternate function)
+  [PASS] PC4 on AF7 (USART1_TX is AF7)
+  [PASS] USART1->BRR = 1476 (expected 1476)
+  [PASS] LPUART1->BRR = 377778 (expected 377778)
+  [PASS] USART1->CR1 = 0x00000009: UE and TE set, RE = 0
+  baud from BRR: LPUART1 256*170e6/377778 = 115199.9, USART1 170e6/1476 = 115176.2
+MANUAL (needs the scope): probe PC4, press B1 once, capture the frame.

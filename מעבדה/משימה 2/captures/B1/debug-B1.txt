@@ -1,0 +1,88 @@
+===== Lab 2, B1: debugger session 2026-11-12 15:02:39
+flashed build/B1/lab2.elf (this project, Debug -O0 -g3); the board runs it from reset
+
+===== GDB attaches: the program PAUSES here (like Pause, F6, in VS Code)
+0x080020f4 in main () at Core/Src/lab2partBtask1.c:181
+181	    if (message_len != 0U) {               /* got mail? */
+#0  0x080020f4 in main () at Core/Src/lab2partBtask1.c:181
+181	    if (message_len != 0U) {               /* got mail? */
+message_len = 0  (0: the buffer is free)
+regs = { LD2 0, good 0, bad 0, crc_sw 0, crc_hw 0 }
+
+----- breakpoints on the reception callback and on handle_message; the PC writes LD2 = 1
+Breakpoint 1 at 0x8001ef4: file Core/Src/lab2partBtask1.c, line 93.
+Note: automatically using hardware breakpoints for read-only addresses.
+Breakpoint 2 at 0x8001fd0: file Core/Src/lab2partBtask1.c, line 119.
+>>> [PC -> board] write LD2 = 1: 01 06 00 00 00 01 48 0A
+
+Breakpoint 1, HAL_UARTEx_RxEventCallback (huart=0x2000002c <hlpuart1>, size=8) at Core/Src/lab2partBtask1.c:93
+93	  if (huart != &hlpuart1) return;
+
+----- 1) HAL_UARTEx_RxEventCallback runs INSIDE the LPUART1 interrupt, when the line goes idle
+#0  HAL_UARTEx_RxEventCallback (huart=0x2000002c <hlpuart1>, size=8) at Core/Src/lab2partBtask1.c:93
+#1  0x08002b68 in HAL_UART_IRQHandler (huart=0x2000002c <hlpuart1>) at partB/hal/stm32g4xx_hal_uart.c:2480
+#2  0x0800231e in LPUART1_IRQHandler () at partB/partB_support.c:14
+#3  <signal handler called>
+#4  main () at Core/Src/lab2partBtask1.c:181
+size = 8 bytes; message_len = 0 (free, so the callback copies rx into message)
+0x200000c0 <rx>:	0x01	0x06	0x00	0x00	0x00	0x01	0x48	0x0a
+
+Breakpoint 2, handle_message (message_bytes=0x20000100 <message> "\001\006", message_length=8) at Core/Src/lab2partBtask1.c:119
+119	  const uint8_t *m = message_bytes;
+
+----- 2) the main loop calls handle_message with the copy
+#0  handle_message (message_bytes=0x20000100 <message> "\001\006", message_length=8) at Core/Src/lab2partBtask1.c:119
+#1  0x08002104 in main () at Core/Src/lab2partBtask1.c:182
+message_length = 8; message_len = 8 (occupied: a new message now would be thrown away)
+0x20000100 <message>:	0x01	0x06	0x00	0x00	0x00	0x01	0x48	0x0a
+address 1, function 0x06, register 0, value 1
+
+----- 3) error recovery: the CPU stays paused while the PC sends another request -> overrun
+Breakpoint 3 at 0x8001f4c: file Core/Src/lab2partBtask1.c, line 104.
+>>> [PC -> board] write LD2 = 1 while the CPU is paused: 01 06 00 00 00 01 48 0A
+WATCH  (LPUART1->ISR >> 3) & 1U             = 1
+-> ORE = 1: nobody read RDR while the CPU was stopped
+
+Breakpoint 3, HAL_UART_ErrorCallback (huart=0x2000002c <hlpuart1>) at Core/Src/lab2partBtask1.c:104
+104	  if (huart == &hlpuart1) {
+
+----- HAL_UART_ErrorCallback: the HAL stopped reception because of the overrun
+#0  HAL_UART_ErrorCallback (huart=0x2000002c <hlpuart1>) at Core/Src/lab2partBtask1.c:104
+#1  0x0800285e in HAL_UART_IRQHandler (huart=0x2000002c <hlpuart1>) at partB/hal/stm32g4xx_hal_uart.c:2346
+#2  0x0800231e in LPUART1_IRQHandler () at partB/partB_support.c:14
+#3  <signal handler called>
+#4  handle_message (message_bytes=0x20000100 <message> "\001\006", message_length=8) at Core/Src/lab2partBtask1.c:119
+#5  0x08002104 in main () at Core/Src/lab2partBtask1.c:182
+huart->ErrorCode = 0x8  (0x8 = HAL_UART_ERROR_ORE)
+huart->RxState = 0x20  (0x20 = ready: reception is stopped)
+105	    HAL_UARTEx_ReceiveToIdle_IT(&hlpuart1, rx, MESSAGE_MAX);
+107	}
+after HAL_UARTEx_ReceiveToIdle_IT: huart->RxState = 0x22  (0x22 = receiving again)
+Temporary breakpoint 4 at 0x80020ec: file Core/Src/lab2partBtask1.c, line 181.
+
+Temporary breakpoint 4, main () at Core/Src/lab2partBtask1.c:181
+181	    if (message_len != 0U) {               /* got mail? */
+
+----- back in the loop: the first request was handled and answered
+regs = { LD2 1, good 1, bad 0, crc_sw 0, crc_hw 0 }
+WATCH  (GPIOA->ODR >> 5) & 1U               = 1
+-> LD2 is on
+message_len = 0  (cleared after handle_message returned: free again)
+
+----- reception works again: the PC writes LD2 = 0
+Breakpoint 5 at 0x8001fd0: file Core/Src/lab2partBtask1.c, line 119.
+<<< [board -> PC] 01 06 00 00 00 01 48 0A
+>>> [PC -> board] write LD2 = 0: 01 06 00 00 00 00 89 CA
+
+Breakpoint 5, handle_message (message_bytes=0x20000100 <message> "\001\006", message_length=8) at Core/Src/lab2partBtask1.c:119
+119	  const uint8_t *m = message_bytes;
+0x20000100 <message>:	0x01	0x06	0x00	0x00	0x00	0x00	0x89	0xca
+main () at Core/Src/lab2partBtask1.c:183
+183	      message_len = 0U;                    /* box is empty again */
+regs = { LD2 0, good 2, bad 0, crc_sw 0, crc_hw 0 }
+WATCH  (GPIOA->ODR >> 5) & 1U               = 0
+-> LD2 is off; good = 2: the request lost in the overrun was never received
+
+===== detach: the program RUNS again (like Continue, F5)
+[Inferior 1 (Remote target) detached]
+<<< [board -> PC] 01 06 00 00 00 00 89 CA

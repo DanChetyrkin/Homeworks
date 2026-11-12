@@ -1,0 +1,16 @@
+=== A1  (2026-11-12 14:48:40, port COM7)
+flash: run-task.ps1 A1
+  flashed lab2\build\A1\lab2.elf (built 2026-11-12 13:49)
+  startup text: 'Lab 2 ready.\r\n'
+  [PASS] the board sends "Lab 2 ready." at reset
+WATCH (read over ST-LINK, program running):
+  GPIOA->MODER = 0xABFFF7AF   GPIOA->AFR[0] = 0x0000CC00
+  (GPIOA->MODER >> 4) & 0xF    = 10 = 0xA = 0b1010  (PA3 10 | PA2 10)
+  (GPIOA->AFR[0] >> 8) & 0xFF  = 204 = 0xCC  (PA3 AF12 | PA2 AF12)
+  [PASS] PA2 and PA3 in mode 10 (alternate function)
+  [PASS] PA2 and PA3 on AF12 (LPUART1)
+  [PASS] PA5 (LD2) is an output (01)
+  [PASS] PC13 (B1) is an input (00)
+  [PASS] LPUART1->BRR = 377778 (expected 377778)
+  [PASS] LPUART1->CR1 = 0x0000000D: UE, RE, TE set
+MANUAL (needs a finger on B1): 10 presses -> 10 digits; hold B1 -> 1 digit.

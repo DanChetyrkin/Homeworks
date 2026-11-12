@@ -1,0 +1,67 @@
+===== Lab 2, B2: debugger session 2026-11-12 15:02:49
+flashed build/B2/lab2.elf (this project, Debug -O0 -g3); the board runs it from reset
+
+===== GDB attaches: the program PAUSES here (like Pause, F6, in VS Code)
+0x08002268 in main () at Core/Src/lab2partBtask2.c:231
+231	    if (message_len != 0U) {               /* got mail? */
+#0  0x08002268 in main () at Core/Src/lab2partBtask2.c:231
+231	    if (message_len != 0U) {               /* got mail? */
+regs = { LD2 0, good 0, bad 0, crc_sw 0, crc_hw 0 }
+
+----- breakpoint on exception(); the PC reads register 9
+Breakpoint 1 at 0x8002028: file Core/Src/lab2partBtask2.c, line 128.
+Note: automatically using hardware breakpoints for read-only addresses.
+>>> [PC -> board] read register 9: 01 03 00 09 00 01 54 08
+
+Breakpoint 1, exception (function=3 '\003', code=2 '\002') at Core/Src/lab2partBtask2.c:128
+128	  uint8_t response[5] = { MB_ADDRESS, (uint8_t)(function | 0x80U), code };
+#0  exception (function=3 '\003', code=2 '\002') at Core/Src/lab2partBtask2.c:128
+#1  0x08002192 in handle_message (message_bytes=0x20000100 <message> "\001\003", message_length=8) at Core/Src/lab2partBtask2.c:174
+#2  0x0800227c in main () at Core/Src/lab2partBtask2.c:232
+exception(function = 0x03, code = 2)  -> 02: illegal data address
+
+----- the PC sends function 0x04
+<<< [board -> PC] 01 83 02 C0 F1
+>>> [PC -> board] function 0x04: 01 04 00 00 00 01 31 CA
+
+Breakpoint 1, exception (function=4 '\004', code=1 '\001') at Core/Src/lab2partBtask2.c:128
+128	  uint8_t response[5] = { MB_ADDRESS, (uint8_t)(function | 0x80U), code };
+exception(function = 0x04, code = 1)  -> 01: illegal function
+
+----- noise: the PC sends a read whose address bit 1 is flipped (01 -> 03), CRC of the original
+Breakpoint 2 at 0x8002064: file Core/Src/lab2partBtask2.c, line 134.
+<<< [board -> PC] 01 84 01 82 C0
+>>> [PC -> board] read, address bit flipped: 03 03 00 00 00 05 85 C9
+
+Breakpoint 2, handle_message (message_bytes=0x20000100 <message> "\003\003", message_length=8) at Core/Src/lab2partBtask2.c:134
+134	  const uint8_t *m = message_bytes;
+0x20000100 <message>:	0x03	0x03	0x00	0x00	0x00	0x05	0x85	0xc9
+main () at Core/Src/lab2partBtask2.c:233
+233	      message_len = 0U;                    /* box is empty again */
+regs = { LD2 0, good 2, bad 1, crc_sw 0, crc_hw 0 }
+-> bad + 1: the CRC is checked first, so this counts as noise, not as a message for slave 3
+
+----- a correct message for slave 2
+>>> [PC -> board] read for slave 2: 02 03 00 00 00 05 85 FA
+
+Breakpoint 2, handle_message (message_bytes=0x20000100 <message> "\002\003", message_length=8) at Core/Src/lab2partBtask2.c:134
+134	  const uint8_t *m = message_bytes;
+0x20000100 <message>:	0x02	0x03	0x00	0x00	0x00	0x05	0x85	0xfa
+main () at Core/Src/lab2partBtask2.c:233
+233	      message_len = 0U;                    /* box is empty again */
+regs = { LD2 0, good 2, bad 1, crc_sw 0, crc_hw 0 }
+-> no change: CRC matches, but the address is not 1 -> ignored, no reply
+
+----- a correct read of all 5 registers
+>>> [PC -> board] read registers 0-4: 01 03 00 00 00 05 85 C9
+
+Breakpoint 2, handle_message (message_bytes=0x20000100 <message> "\001\003", message_length=8) at Core/Src/lab2partBtask2.c:134
+134	  const uint8_t *m = message_bytes;
+main () at Core/Src/lab2partBtask2.c:233
+233	      message_len = 0U;                    /* box is empty again */
+regs = { LD2 0, good 3, bad 1, crc_sw 0, crc_hw 0 }
+-> good + 1, and the reply carries these values
+
+===== detach: the program RUNS again (like Continue, F5)
+[Inferior 1 (Remote target) detached]
+<<< [board -> PC] 01 03 0A 00 00 00 03 00 01 00 00 00 00 2A 76

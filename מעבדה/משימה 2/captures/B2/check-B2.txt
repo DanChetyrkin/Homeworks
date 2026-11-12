@@ -1,0 +1,59 @@
+=== B2  (2026-11-12 14:49:11, port COM7)
+flash: run-task.ps1 B2
+  flashed lab2\build\B2\lab2.elf (built 2026-11-12 14:36)
+$ python lab02_modbus.py --port COM7
+  [PC] COM7 open: Modbus RTU master, slave 1, 115200 baud, 8N1.
+  [PC] round 1: write LD2=1: OK (1 send); read: LD2=1 good=2 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 2: write LD2=0: OK (1 send); read: LD2=0 good=4 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 3: write LD2=1: OK (1 send); read: LD2=1 good=6 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 4: write LD2=0: OK (1 send); read: LD2=0 good=8 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 5: write LD2=1: OK (1 send); read: LD2=1 good=10 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 6: write LD2=0: OK (1 send); read: LD2=0 good=12 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 7: write LD2=1: OK (1 send); read: LD2=1 good=14 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 8: write LD2=0: OK (1 send); read: LD2=0 good=16 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 9: write LD2=1: OK (1 send); read: LD2=1 good=18 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 10: write LD2=0: OK (1 send); read: LD2=0 good=20 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 11: write LD2=1: OK (1 send); read: LD2=1 good=22 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 12: write LD2=0: OK (1 send); read: LD2=0 good=24 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 13: write LD2=1: OK (1 send); read: LD2=1 good=26 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 14: write LD2=0: OK (1 send); read: LD2=0 good=28 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 15: write LD2=1: OK (1 send); read: LD2=1 good=30 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 16: write LD2=0: OK (1 send); read: LD2=0 good=32 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 17: write LD2=1: OK (1 send); read: LD2=1 good=34 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 18: write LD2=0: OK (1 send); read: LD2=0 good=36 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 19: write LD2=1: OK (1 send); read: LD2=1 good=38 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 20: write LD2=0: OK (1 send); read: LD2=0 good=40 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] done: 40 sends, 0 with a wrong bit, 0 requests with no reply, 0 invalid replies.
+  [PASS] lab02_modbus.py exit status 0
+$ python lab02_modbus.py --port COM7 --exceptions
+  [PC] COM7 open: Modbus RTU master, slave 1, 115200 baud, 8N1.
+  [PC] read register 9 (no such register): exception code 2
+  [PC] function 0x04 (not supported): exception code 1
+  [PASS] lab02_modbus.py exit status 0
+  [PASS] exception codes: register 9 -> 2, function 0x04 -> 1 (got ['2', '1'])
+reset the board (counters start at zero)
+$ python lab02_modbus.py --port COM7 --errors 0.3
+  [PC] COM7 open: Modbus RTU master, slave 1, 115200 baud, 8N1.
+  [PC] round 1: write LD2=1: OK (1 send); read: LD2=1 good=2 bad=0 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 2: write LD2=0: OK (3 sends); read: LD2=0 good=4 bad=2 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 3: write LD2=1: OK (1 send); read: LD2=1 good=6 bad=2 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 4: write LD2=0: OK (1 send); read: LD2=0 good=8 bad=4 crc_sw=0 crc_hw=0 (3 sends)
+  [PC] round 5: write LD2=1: OK (1 send); read: LD2=1 good=10 bad=4 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 6: write LD2=0: OK (1 send); read: LD2=0 good=12 bad=4 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 7: write LD2=1: OK (1 send); read: LD2=1 good=14 bad=5 crc_sw=0 crc_hw=0 (2 sends)
+  [PC] round 8: write LD2=0: OK (2 sends); read: LD2=0 good=16 bad=6 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 9: write LD2=1: OK (1 send); read: LD2=1 good=18 bad=6 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 10: write LD2=0: OK (3 sends); read: LD2=0 good=20 bad=8 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 11: write LD2=1: OK (1 send); read: LD2=1 good=22 bad=8 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 12: write LD2=0: OK (1 send); read: LD2=0 good=24 bad=8 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 13: write LD2=1: OK (3 sends); read: LD2=1 good=26 bad=10 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 14: write LD2=0: OK (1 send); read: LD2=0 good=28 bad=10 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 15: write LD2=1: OK (3 sends); read: LD2=1 good=30 bad=13 crc_sw=0 crc_hw=0 (2 sends)
+  [PC] round 16: write LD2=0: OK (1 send); read: LD2=0 good=32 bad=13 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 17: write LD2=1: OK (1 send); read: LD2=1 good=34 bad=13 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 18: write LD2=0: OK (1 send); read: LD2=0 good=36 bad=14 crc_sw=0 crc_hw=0 (2 sends)
+  [PC] round 19: write LD2=1: OK (1 send); read: LD2=1 good=38 bad=14 crc_sw=0 crc_hw=0 (1 send)
+  [PC] round 20: write LD2=0: OK (1 send); read: LD2=0 good=40 bad=15 crc_sw=0 crc_hw=0 (2 sends)
+  [PC] done: 55 sends, 15 with a wrong bit, 0 requests with no reply, 0 invalid replies.
+  [PASS] lab02_modbus.py exit status 0
+  last read bad = 15, [PC] done: 15 with a wrong bit

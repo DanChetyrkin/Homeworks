@@ -1,0 +1,7 @@
+=== A3a  (2026-11-12 14:48:46, port COM7)
+flash: run-task.ps1 A3a
+  flashed lab2\build\A3a\lab2.elf (built 2026-11-12 14:48)
+  startup text: 'Lab 2 ready.\r\n'
+  [PASS] the board sends "Lab 2 ready." at reset
+  burst 1: sent '0123456789', received '0123456789' (10/10)
+  [PASS] echo by polling, no delay: all 10 characters return

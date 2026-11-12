@@ -1,0 +1,34 @@
+===== Lab 2, A1: debugger session 2026-11-12 15:02:16
+flashed build/A1/lab2.elf (this project, Debug -O0 -g3); the board runs it from reset
+<<< [board -> PC] 'Lab 2 ready.\r\n'
+
+===== GDB attaches: the program PAUSES here (like Pause, F6, in VS Code)
+main () at Core/Src/lab2partAtask1.c:152
+152	    uint32_t now = (GPIOC->IDR >> 13) & 1U;            /* is B1 down now? (1 = down) */
+#0  main () at Core/Src/lab2partAtask1.c:152
+152	    uint32_t now = (GPIOC->IDR >> 13) & 1U;            /* is B1 down now? (1 = down) */
+
+----- WATCH of Task A1: the mode and AF fields of PA2 (low half) and PA3 (high half)
+WATCH  (GPIOA->MODER >> 4) & 0xF            = 10 = 0xA
+WATCH  (GPIOA->AFR[0] >> 8) & 0xFF          = 204 = 0xCC
+-> mode PA3 = 10, PA2 = 10 (10 = alternate function)
+-> AF   PA3 = 12, PA2 = 12 (AF12 = LPUART1)
+
+----- the rest of uart_init() and the GPIO setup
+GPIOA->MODER = 0xABFFF7AF   GPIOA->AFR[0] = 0x0000CC00
+WATCH  (GPIOA->MODER >> 26) & 3             = 2
+-> PA13 = 10 (SWDIO): uart_init() kept the debugger pins
+WATCH  (GPIOA->MODER >> 10) & 3             = 1
+-> PA5 (LD2) = 01, output
+WATCH  (GPIOC->MODER >> 26) & 3             = 0
+-> PC13 (B1) = 00, input
+WATCH  RCC->APB1ENR2 & 1                    = 1
+-> LPUART1EN = 1, the clock of LPUART1 is on
+WATCH  LPUART1->BRR                         = 377778
+WATCH  LPUART1->CR1                         = 13 = 0xD
+-> 0xD = UE (bit 0) + RE (bit 2) + TE (bit 3)
+WATCH  (GPIOC->IDR >> 13) & 1               = 0
+previous = 0   (B1 state of the last pass)
+
+===== detach: the program RUNS again (like Continue, F5)
+[Inferior 1 (Remote target) detached]

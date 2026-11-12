@@ -1,0 +1,38 @@
+===== Lab 2, B3: debugger session 2026-11-12 15:02:58
+flashed build/B3/lab2.elf (this project, Debug -O0 -g3); the board runs it from reset
+
+===== GDB attaches: the program PAUSES here (like Pause, F6, in VS Code)
+0x0800234c in main () at Core/Src/lab2partBtask3.c:260
+260	    if (message_len != 0U) {               /* got mail? */
+#0  0x0800234c in main () at Core/Src/lab2partBtask3.c:260
+260	    if (message_len != 0U) {               /* got mail? */
+
+----- the cycle counter and the CRC unit after the preparation
+WATCH  (CoreDebug->DEMCR >> 24) & 1U        = 1
+-> TRCENA = 1
+WATCH  DWT->CTRL & 1U                       = 1
+-> CYCCNTENA = 1: DWT->CYCCNT counts every clock cycle
+WATCH  (RCC->AHB1ENR >> 12) & 1U            = 1
+-> CRCEN = 1
+WATCH  CRC->POL                             = 32773 = 0x8005
+WATCH  CRC->INIT                            = 65535 = 0xFFFF
+WATCH  CRC->CR                              = 168 = 0xA8
+-> POLYSIZE = 1 (01: 16 bits), REV_IN = 1 (01: by byte), REV_OUT = 1
+
+----- breakpoint at the end of crc_ok (line 142); the PC reads registers 0-4
+Breakpoint 1 at 0x800207e: file Core/Src/lab2partBtask3.c, line 142.
+Note: automatically using hardware breakpoints for read-only addresses.
+>>> [PC -> board] read registers 0-4: 01 03 00 00 00 05 85 C9
+
+Breakpoint 1, crc_ok (message_bytes=0x20000100 <message> "\001\003", message_length=8) at Core/Src/lab2partBtask3.c:142
+142	  return received == crc_sw && received == crc_hw;
+0x20000100 <message>:	0x01	0x03	0x00	0x00	0x00	0x05	0x85	0xc9
+received = 0xC985, crc_sw = 0xC985, crc_hw = 0xC985  (same: the CRC matches)
+byte_count = 6 CRC input bytes
+WATCH  regs[3]                              = 1527
+WATCH  regs[4]                              = 219
+-> software 8.98 us, hardware 1.288 us at 170 MHz; ratio 6.97
+
+===== detach: the program RUNS again (like Continue, F5)
+[Inferior 1 (Remote target) detached]
+<<< [board -> PC] 01 03 0A 00 00 00 01 00 00 05 F7 00 DB C5 13

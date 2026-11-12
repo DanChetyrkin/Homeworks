@@ -1,0 +1,27 @@
+=== B1  (2026-11-12 14:49:03, port COM7)
+flash: run-task.ps1 B1
+  flashed lab2\build\B1\lab2.elf (built 2026-11-12 14:36)
+$ python lab02_modbus.py --port COM7 --write-only
+  [PC] COM7 open: Modbus RTU master, slave 1, 115200 baud, 8N1.
+  [PC] round 1: write LD2=1: OK (1 send)
+  [PC] round 2: write LD2=0: OK (1 send)
+  [PC] round 3: write LD2=1: OK (1 send)
+  [PC] round 4: write LD2=0: OK (1 send)
+  [PC] round 5: write LD2=1: OK (1 send)
+  [PC] round 6: write LD2=0: OK (1 send)
+  [PC] round 7: write LD2=1: OK (1 send)
+  [PC] round 8: write LD2=0: OK (1 send)
+  [PC] round 9: write LD2=1: OK (1 send)
+  [PC] round 10: write LD2=0: OK (1 send)
+  [PC] round 11: write LD2=1: OK (1 send)
+  [PC] round 12: write LD2=0: OK (1 send)
+  [PC] round 13: write LD2=1: OK (1 send)
+  [PC] round 14: write LD2=0: OK (1 send)
+  [PC] round 15: write LD2=1: OK (1 send)
+  [PC] round 16: write LD2=0: OK (1 send)
+  [PC] round 17: write LD2=1: OK (1 send)
+  [PC] round 18: write LD2=0: OK (1 send)
+  [PC] round 19: write LD2=1: OK (1 send)
+  [PC] round 20: write LD2=0: OK (1 send)
+  [PC] done: 20 sends, 0 with a wrong bit, 0 requests with no reply, 0 invalid replies.
+  [PASS] lab02_modbus.py exit status 0

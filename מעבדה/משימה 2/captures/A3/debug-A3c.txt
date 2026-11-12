@@ -1,0 +1,51 @@
+===== Lab 2, A3c: debugger session 2026-11-12 15:02:33
+flashed build/A3c/lab2.elf (this project, Debug -O0 -g3); the board runs it from reset
+<<< [board -> PC] 'Lab 2 ready.\r\n'
+
+===== GDB attaches: the program PAUSES here (like Pause, F6, in VS Code)
+0x0800144a in main () at Core/Src/lab2partAtask3.c:218
+218	    for (volatile uint32_t i = 0; i < WORK_PASSES; i++) { }
+#0  0x0800144a in main () at Core/Src/lab2partAtask3.c:218
+218	    for (volatile uint32_t i = 0; i < WORK_PASSES; i++) { }
+
+----- the receive interrupt is enabled
+WATCH  (LPUART1->CR1 >> 5) & 1U             = 1
+-> RXNEIE = 1
+WATCH  (NVIC->ISER[2] >> 27) & 1U           = 1
+-> NVIC enable of IRQ 91 = 64 + 27 (LPUART1)
+
+----- breakpoint on LPUART1_IRQHandler; the PC sends one character while the loop is in the delay
+Breakpoint 1 at 0x8001336: file Core/Src/lab2partAtask3.c, line 145.
+Note: automatically using hardware breakpoints for read-only addresses.
+>>> [PC -> board] one character: 'A'
+
+Breakpoint 1, LPUART1_IRQHandler () at Core/Src/lab2partAtask3.c:145
+145	  uint32_t status = LPUART1->ISR;
+
+----- stopped in the interrupt handler
+IPSR = 107 = 16 + 91 -> exception of IRQ 91, LPUART1
+WATCH  (LPUART1->ISR >> 5) & 1U             = 1
+WATCH  (LPUART1->ISR >> 3) & 1U             = 0
+-> the character is in RDR (RXNE = 1), no overrun
+
+The call stack: the interrupt stopped main() inside the busy-wait delay (see i):
+#0  LPUART1_IRQHandler () at Core/Src/lab2partAtask3.c:145
+        status = 536985536
+#1  <signal handler called>
+No symbol table info available.
+#2  0x08001444 in main () at Core/Src/lab2partAtask3.c:218
+        i = 1545729
+        now = 0
+Breakpoint 2 at 0x8001356: file Core/Src/lab2partAtask3.c, line 150.
+
+Breakpoint 2, LPUART1_IRQHandler () at Core/Src/lab2partAtask3.c:150
+150	    uart_putc((char)LPUART1->RDR);
+152	}
+
+----- after the echo line of the handler
+WATCH  (LPUART1->ISR >> 5) & 1U             = 0
+-> RDR was read within microseconds, long before the next frame (86.8 us) ends
+
+===== detach: the program RUNS again (like Continue, F5)
+[Inferior 1 (Remote target) detached]
+<<< [board -> PC] 'A'

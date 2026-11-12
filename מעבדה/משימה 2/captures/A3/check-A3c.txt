@@ -1,0 +1,12 @@
+=== A3c  (2026-11-12 14:48:58, port COM7)
+flash: run-task.ps1 A3c
+  flashed lab2\build\A3c\lab2.elf (built 2026-11-12 14:35)
+  startup text: 'Lab 2 ready.\r\n'
+  [PASS] the board sends "Lab 2 ready." at reset
+  burst 1: sent '0123456789', received '0123456789' (10/10)
+  burst 2: sent '0123456789', received '0123456789' (10/10)
+  LPUART1->CR1 = 0x0000002D   NVIC->ISER[2] = 0x08000000   LPUART1->ISR = 0x006000D0
+  [PASS] echo by interrupt: all 10 characters return, both times
+  [PASS] RXNEIE (CR1 bit 5) = 1
+  [PASS] NVIC ISER[2] bit 27 = 1 (IRQ 91 = 64 + 27, LPUART1)
+  [PASS] ORE = 0 (no overrun)
