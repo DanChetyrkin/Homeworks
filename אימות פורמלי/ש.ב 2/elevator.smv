@@ -1,0 +1,54 @@
+-- elevator.smv : three-floor elevator, no fairness constraints
+MODULE main
+VAR
+  level : 1..3;                    -- current floor
+  door  : {open, closed};
+  r1 : boolean;                    -- pending request for floor i
+  r2 : boolean;
+  r3 : boolean;
+  -- uncontrollable inputs: no init, no next => chosen freely by the environment in every step
+  c1 : boolean;                    -- call button of floor i pressed in this step
+  c2 : boolean;
+  c3 : boolean;
+  move : {stay, up, down};         -- what the elevator is told to do in this step
+
+DEFINE
+  served1 := (level = 1) & (door = open);
+  served2 := (level = 2) & (door = open);
+  served3 := (level = 3) & (door = open);
+  go_up   := (door = closed) & (move = up)   & (level < 3);
+  go_down := (door = closed) & (move = down) & (level > 1);
+  moving  := go_up | go_down;
+
+ASSIGN
+  init(level) := 1;
+  init(door)  := closed;
+  init(r1) := FALSE;
+  init(r2) := FALSE;
+  init(r3) := FALSE;
+
+  next(level) := case
+    go_up   & (level = 1) : 2;
+    go_up   & (level = 2) : 3;
+    go_down & (level = 3) : 2;
+    go_down & (level = 2) : 1;
+    TRUE                  : level;
+  esac;
+
+  -- when the elevator moves the door stays closed; otherwise it may open, close or stay as it is
+  next(door) := case
+    moving : closed;
+    TRUE   : {open, closed};
+  esac;
+
+  next(r1) := (r1 | c1) & !served1;
+  next(r2) := (r2 | c2) & !served2;
+  next(r3) := (r3 | c3) & !served3;
+
+-- every call from floor i is eventually answered
+LTLSPEC G (c1 -> F served1)
+LTLSPEC G (c2 -> F served2)
+LTLSPEC G (c3 -> F served3)
+
+-- some continuation always exists that serves floor 2
+CTLSPEC AG (c2 -> EF served2)
