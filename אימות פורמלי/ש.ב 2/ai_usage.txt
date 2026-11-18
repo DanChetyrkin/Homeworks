@@ -6,30 +6,13 @@ How it was used: I gave Claude the assignment PDF (hw2.pdf) and the nuXmv setup.
 “Go over all the concepts that appear in the questions of the attached assignment, and explain each one in two sentences at most. List them in the order they appears.”
 “For each concept in the list, write which other concept is easy to confuse it with, and in one sentence what the diffrence is.”
 “Which of this concepts I must understand before the others? Order them in a recommended learning order.”
-Stage 2: Solving with emphasis
 
-Prompt 4, one per question:
+Q1: “check Question 1 parts a to c using, and putting emphasis on, strongly connected components and the fairness conditions (justice and compassion), and explain if we have mistake. Make sure we dont miss that a fair SCC must be checked as a whole set (compassion: if it contains a b state it need a c state), that a single state without a self loop is a trivial SCC, and that compassion hold vacuously when the SCC has no b state.”
 
-Q1: “Solve Question 1 parts a to c using, and putting emphasis on, strongly connected components and the fairness conditions (justice and compassion), and explain every step and why we took it. Make sure we dont miss that a fair SCC must be checked as a whole set (compassion: if it contains a b state it need a c state), that a single state without a self loop is a trivial SCC, and that compassion hold vacuously when the SCC has no b state.”
+Q2: “check Question 2 parts a to c using, and putting emphasis on, the well formedness rule of CTL (every temporal operator must come directly after a path quantifier) and the difference between holds on all paths in LTL and path quantifiers in CTL, and explain if we have mistake. Make sure we dont miss that a counterexample for LTL implies CTL must satisfy the LTL formula on all paths but fail the CTL formula at the initial state, that eventually always p is not the same as A eventually A always p, and that for there is a path properties we cant use LTL.”
 
-Q2: “Solve Question 2 parts a to c using, and putting emphasis on, the well formedness rule of CTL (every temporal operator must come directly after a path quantifier) and the difference between holds on all paths in LTL and path quantifiers in CTL, and explain every step and why we took it. Make sure we dont miss that a counterexample for LTL implies CTL must satisfy the LTL formula on all paths but fail the CTL formula at the initial state, that eventually always p is not the same as A eventually A always p, and that for there is a path properties we cant use LTL.”
+Q3: “check Question 3 parts a to d using, and putting emphasis on, nuXmv modeling with ASSIGN and DEFINE, free input variables, and JUSTICE versus COMPASSION, and explain if we have mistake. Make sure we dont miss that c1 to c3 and move are declared in VAR with neither init nor next, that next of ri use the current ci and served i, that justice dont force the door to open at the right floor, and that compassion in nuXmv is reliable only for LTL, so the CTL result under compassion carry a warning.”
 
-Q3: “Solve Question 3 parts a to d using, and putting emphasis on, nuXmv modeling with ASSIGN and DEFINE, free input variables, and JUSTICE versus COMPASSION, and explain every step and why we took it. Make sure we dont miss that c1 to c3 and move are declared in VAR with neither init nor next, that next of ri use the current ci and served i, that justice dont force the door to open at the right floor, and that compassion in nuXmv is reliable only for LTL, so the CTL result under compassion carry a warning.”
+Q4: “check Question 4 parts a to c using, and putting emphasis on, the fixpoint characterizations of E p until q and EG p, and if we have mistake. Make sure we dont miss that the least fixpoint start from Z0 equals Q and the greatest from Z0 equals P, that E next Z means computing the states that has a successor in Z, that A eventually q equals not E always not q, and that AG of st equals t implies AF q only test reachable states.”
 
-Q4: “Solve Question 4 parts a to c using, and putting emphasis on, the fixpoint characterizations of E p until q and EG p, and explain every step and why we took it. Make sure we dont miss that the least fixpoint start from Z0 equals Q and the greatest from Z0 equals P, that E next Z means computing the states that has a successor in Z, that A eventually q equals not E always not q, and that AG of st equals t implies AF q only test reachable states.”
-
-Prompt 5, before solving, one per question:
-
-Q1: “Before you solve Question 1, state which concepts and claims from the lecture it requires (SCCs, fair computations, feasibility, justice, compassion), and which common mistakes happen in this type of question.”
-Q2: “Before you solve Question 2, state which concepts and claims from the lecture it requires (CTL syntax, LTL versus CTL semantics, expressiveness), and which common mistakes happen in this type of question.”
-Q3: “Before you solve Question 3, state which concepts and claims from the lecture and practical it requires (nuXmv modeling, LTL and CTL specs, justice, compassion), and which common mistakes happen in this type of question.”
-Q4: “Before you solve Question 4, state which concepts and claims from the lecture it requires (CTL fixpoint characterizations, symbolic model checking), and which common mistakes happen in this type of question.”
-
-Prompt 6, step labeling, one per question:
-
-Q1: “Solve Question 1 part a, and at each step state if its a calculation, a definition, or a claim, and what it follows from.”
-Q2: “Solve Question 2 part b, and at each step state if its a calculation, a definition, or a claim, and what it follows from.”
-Q3: “Solve Question 3 part d, and at each step state if its a calculation, a definition, or a claim, and what it follows from.”
-Q4: “Solve Question 4 part a, and at each step state if its a calculation, a definition, or a claim, and what it follows from.”
-Stage 3: Checking and understanding
-“Go over the solution you gave and check it again. Find mistakes or gaps, and state what was verified with code or a tool and what was only claimed.”
+"when you check thay my Q is good , please create answer file in english.
